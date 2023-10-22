@@ -1,4 +1,4 @@
-import { h, reactive } from '~/package_modules/mini-vue'
+import { h, reactive } from 'king-minivue'
 import './style.less'
 import { msgSuccess, msgError } from '~/package_modules/message'
 import preview from '~/package_modules/preview'

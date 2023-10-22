@@ -1,4 +1,5 @@
-import { createApp } from '~/package_modules/mini-vue'
+import { createApp } from 'king-minivue'
+
 import './src/assets/styles/index.less'
 import App from './src/app.js'
 

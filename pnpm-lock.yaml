@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+dependencies:
+  king-minivue:
+    specifier: ^1.0.0
+    version: 1.0.0
+
 devDependencies:
   '@types/node':
     specifier: ^20.8.7
@@ -316,6 +321,10 @@ packages:
   /is-what@3.14.1:
     resolution: {integrity: sha512-sNxgpk9793nzSs7bA6JQJGeIuRBQhAaNGG77kzYQgMkrID+lS6SlK07K5LaptscDlSaIgH+GPFzf+d75FVxozA==}
     dev: true
+
+  /king-minivue@1.0.0:
+    resolution: {integrity: sha512-mgslPDDSPwYclgg21OB7B4SabXgbzUNsvLCFlHxZ0d5DyINea0AP/Z8NUPcx7ORXd3cqNJ+8rw6NtRnMESOy1Q==}
+    dev: false
 
   /less@4.2.0:
     resolution: {integrity: sha512-P3b3HJDBtSzsXUl0im2L7gTO5Ubg8mEN6G8qoTS77iXxXX4Hvu4Qj540PZDvQ8V6DmX6iXo98k7Md0Cm1PrLaA==}

@@ -1,4 +1,4 @@
-import { h, ref } from '~/package_modules/mini-vue'
+import { h, ref } from 'king-minivue'
 import './style.less'
 import { getAssetsUrl } from '@/utils'
 

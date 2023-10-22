@@ -1,4 +1,4 @@
-import { h, reactive } from '~/package_modules/mini-vue'
+import { h } from 'king-minivue'
 import './style.less'
 
 import ImageList from './cpns/image-list'
