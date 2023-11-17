@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <button id="success">success</button>
+      <button id="warning">warning</button>
+      <button id="info">info</button>
+      <button id="error">error</button>
+    </div>
+    <script src="./index.js"></script>
+    <script>
+      const message = new Message();
+      document.querySelector("#success").addEventListener("click", function () {
+        message.setOption({
+          type: "success",
+          message: "success",
+        });
+      });
+      document.querySelector("#warning").addEventListener("click", function () {
+        message.setOption({
+          type: "warning",
+          message: "warning",
+        });
+      });
+      document.querySelector("#error").addEventListener("click", function () {
+        message.setOption({
+          type: "error",
+          message: "error",
+        });
+      });
+      document.querySelector("#info").addEventListener("click", function () {
+        message.setOption({ message: "info" });
+      });
+    </script>
+  </body>
+</html>

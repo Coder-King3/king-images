@@ -1,0 +1,34 @@
+@import url(./reset.less);
+@import url(./theme.less);
+
+// 滚动条
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #c0c4cc;
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+}
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* 容器 */
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--theme-app-bg); /* #f8f9fa */
+  background-image: url(../images/bg.svg);
+  transition: all 0.3s;
+}
+
+.svg-icon {
+  width: 2em;
+  height: 2em;
+}
