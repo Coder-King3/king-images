@@ -100,25 +100,28 @@ export function formatTimer(cellValue, foramtType = 'yyyy-MM-dd HH:mm:ss') {
 
 // react行内样式处理
 export function beautify(styleing) {
-  // 提取样式字符串数组
-  let styleList = styleing[0]
+  let styleString = Array.isArray(styleing) ? styleing[0] : styleing
+
+  // 格式化样式字符串
+  const rulesArray = styleString
     .split(';')
-    .map((item) => item.replace(/[\r\n]/g, '').trim())
-    .filter((val) => val != '')
+    .map((rule) => rule.trim())
+    .filter((item) => {
+      const [_, value] = item.split(':')
+      if (value && value != '') return item
+      return false
+    })
 
-  // 对样式字符串数组格式化
-  styleList = styleList.map((item) => {
-    let [key, value] = item.split(':')
-    // key转换为小驼峰
-    key = key.split('-')
-    key = `${key[0]}${key[0].replace(key[0][0], key[0][0].toUpperCase())}`
-    value = value.trim()
-
-    return [key, value]
-  })
-
-  // 转换为对象
-  styleObject = Object.fromEntries(styleList)
+  // 转换样式数据为对象
+  const styleObject = rulesArray.reduce((acc, curr) => {
+    const [property, value] = curr.split(':').map((part) => part.trim())
+    // 小驼峰属性
+    const camelCaseProperty = property.replace(/-([a-z])/g, (match, letter) =>
+      letter.toUpperCase()
+    )
+    acc[camelCaseProperty] = value
+    return acc
+  }, {})
 
   return styleObject
 }
