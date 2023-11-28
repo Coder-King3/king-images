@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './style.less'
-import { getAssetsUrl, formatTimer } from '@/utils'
+import { getAssetsUrl } from '@/utils'
+import { themeContext } from '@/context'
 
 const Setting = () => {
   return (
@@ -37,25 +38,14 @@ const FullScreen = () => {
 }
 
 const ThemeToggle = () => {
-  const htmlRoot = document.documentElement
-
-  function autoThemeMode() {
-    const { hours } = formatTimer(new Date(), null)
-    let THEME_MODE
-    if (parseInt(hours) >= 6 && parseInt(hours) <= 18) {
-      THEME_MODE = 'light'
-    } else {
-      THEME_MODE = 'dark'
-    }
-    document.documentElement.setAttribute('theme-mode', THEME_MODE)
-  }
-  autoThemeMode()
+  // 初始化主题
+  const [mode, setMode] = useContext(themeContext)
 
   const handleThemeToggle = () => {
-    if (htmlRoot.getAttribute('theme-mode') == 'dark') {
-      htmlRoot.setAttribute('theme-mode', 'light')
+    if (mode == 'dark') {
+      setMode('light')
     } else {
-      htmlRoot.setAttribute('theme-mode', 'dark')
+      setMode('dark')
     }
   }
 
