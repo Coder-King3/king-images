@@ -11,6 +11,7 @@ window.baseConfig = {
     'https://article.biliimg.com/bfs/article/47f02b5aa6ca6ac24ce0ec14865868fe627872080.png',
     'https://article.biliimg.com/bfs/article/cf3ccda83e0ef774b6258a4a7eec4034627872080.png',
     'https://article.biliimg.com/bfs/article/a5118042dc299a7bf4bea1fb5461c1f5627872080.png',
-    'https://article.biliimg.com/bfs/article/fb26f5d2c691d993396eb32d6f50c8af627872080.jpg'
+    'https://article.biliimg.com/bfs/article/fb26f5d2c691d993396eb32d6f50c8af627872080.jpg',
+    'https://i0.hdslb.com/bfs/article/46fd6f53c9dec0990c0fdc0bd82175f2627872080.jpg'
   ]
 }
