@@ -1,0 +1,26 @@
+/* theme.css主题样式文件 */
+:root {
+  --theme-app-bg: #f8f9fa; /* 背景 */
+  --theme-header-title: #000000;
+  --theme-content-bg: #ffffff;
+  --theme-preview-icon: #2f2f2f;
+  --theme-content-shadow: rgba(0, 0, 0, 0.15);
+}
+
+// 光明模式
+html[mode='light'] {
+  --theme-app-bg: #f8f9fa; /* 背景 */
+  --theme-header-title: #000000;
+  --theme-content-bg: #ffffff;
+  --theme-preview-icon: #2f2f2f;
+  --theme-content-shadow: rgba(0, 0, 0, 0.15);
+}
+
+// 暗黑模式
+html[mode='dark'] {
+  --theme-app-bg: #1a1a1a; /* 背景 */
+  --theme-header-title: #ffffff;
+  --theme-content-bg: #2f2f2f;
+  --theme-preview-icon: #ffffff;
+  --theme-content-shadow: rgba(255, 255, 255, 0.1);
+}
