@@ -1,205 +1,165 @@
 # King Images
 
-## Project Introduction
+King Images 是一个功能强大的图片上传和管理工具，支持多种图片格式，提供便捷的上传、管理和复制功能。无论是开发者还是内容创作者，都能通过本工具高效地处理和组织图片资源。
 
-King Images is a powerful image upload and management tool that supports various image formats and provides convenient upload, management, and copying features. Whether you're a developer or content creator, this tool helps you efficiently process and organize image resources.
+## 主要功能
 
-## Key Features
+### 图片上传
 
-### Image Upload
+- **多种上传方式**：支持拖拽上传、点击选择和粘贴上传
+- **批量处理**：支持多图片同时上传，并显示实时上传进度
+- **格式支持**：兼容JPG、PNG、GIF、WebP等常见图片格式
+- **上传进度**：实时显示上传速度、剩余时间和成功/失败状态
 
-- **Multiple Upload Methods**: Support for drag-and-drop, click-to-select, and paste uploads
-- **Batch Processing**: Support for uploading multiple images simultaneously with real-time progress display
-- **Format Support**: Compatible with common image formats including JPG, PNG, GIF, and WebP
-- **Upload Progress**: Real-time display of upload speed, remaining time, and success/failure status
+### 图片管理
 
-### Image Management
+- **智能图库**：自适应网格布局，根据图片比例优化显示效果
+- **预览功能**：支持图片放大预览，提供流畅的浏览体验
+- **格式转换**：支持原图、WebP、Markdown和自定义格式一键复制
 
-- **Smart Gallery**: Adaptive grid layout that optimizes display based on image proportions
-- **Preview Function**: Support for enlarged image previews, providing a smooth browsing experience
-- **Format Conversion**: One-click copying in original, WebP, Markdown, and custom formats
+### 数据导入导出
 
-### Data Import and Export
+- **数据备份**：一键导出所有图片数据为JSON文件
+- **快速恢复**：支持导入备份数据，自动处理重复ID
 
-- **Data Backup**: One-click export of all image data to JSON files
-- **Quick Recovery**: Support for importing backup data with automatic handling of duplicate IDs
+### 用户体验
 
-### User Experience
+- **登录方式**：支持二维码扫码登录和账号密码登录
+- **响应式设计**：适配不同设备屏幕，提供一致的使用体验
+- **本地存储**：使用IndexedDB在浏览器中存储图片信息，无需服务器
 
-- **Login Methods**: Support for QR code scanning login and username/password login
-- **Responsive Design**: Adapts to different device screens, providing a consistent user experience
-- **Local Storage**: Uses IndexedDB to store image information in the browser, no server required
+## 安装
 
-## Installation and Usage
+### 环境要求
 
-### Requirements
+- Node.js 16.0.0 或更高版本
+- npm 7.0.0 或更高版本 / pnpm 8.0.0 或更高版本
 
-- Node.js 16.0.0 or higher
-- npm 7.0.0 or higher / pnpm 8.0.0 or higher
+### 安装步骤
 
-### Installation Steps
-
-1. Clone the project locally
+1. 克隆项目到本地
 
 ```bash
 git clone https://github.com/yourusername/king-images.git
 cd king-images
 ```
 
-2. Install dependencies
+2. 安装依赖
 
 ```bash
-# Using npm
+# 使用 npm
 npm install
 
-# Or using pnpm
+# 或使用 pnpm
 pnpm install
 ```
 
-3. Start the development server
+3. 启动开发服务器
 
 ```bash
-# Using npm
+# 使用 npm
 npm run dev
 
-# Or using pnpm
+# 或使用 pnpm
 pnpm dev
 ```
 
-4. Build for production
+4. 构建生产版本
 
 ```bash
-# Using npm
+# 使用 npm
 npm run build
 
-# Or using pnpm
+# 或使用 pnpm
 pnpm build
 ```
 
-### Usage Guide
+### 使用指南
 
-1. **Image Upload**
+1. **图片上传**
 
-   - Go to the homepage and click on the "Image Upload" tab
-   - Drag images to the upload area or click the "Select Files" button
-   - You can also directly copy images and paste them into the page
-   - Click the "Upload All" button to start uploading
-   - After uploading, images will appear in the "Recent Uploads" area
+   - 进入首页，点击"图片上传"标签
+   - 将图片拖拽到上传区域，或点击"选择文件"按钮选择图片
+   - 也可以直接复制图片并粘贴到页面中
+   - 点击"上传全部"按钮开始上传
+   - 上传完成后，图片将显示在"最近上传"区域
 
-2. **Image Gallery Management**
-   - Click the "Image Gallery" tab to view all uploaded images
-   - Click on an image to copy the corresponding format link (Markdown or WebP)
-   - You can delete or manage images as needed
+2. **图片库管理**
+   - 点击"图片库"标签查看所有已上传的图片
+   - 点击图片可复制对应格式的链接（Markdown或WebP）
+   - 可以根据需要删除或管理图片
 
-### Image Formats
+### 图片格式
 
-| Type                                         | Url                                |
-| -------------------------------------------- | ---------------------------------- |
-| Original image                               | baseURL/1.jpg                      |
-| Original resolution, quality compression     | baseURL/1.jpg@1e_1c.jpg            |
-| Specified width, adaptive height, compressed | baseURL/1.jpg@104w_1e_1c.jpg       |
-| Specified height, adaptive width, compressed | baseURL/1.jpg@104h_1e_1c.jpg       |
-| Specified dimensions, compressed             | baseURL/1.jpg@104w_104h_1e_1c.jpg  |
-| Original resolution, webp format (smallest)  | baseURL/1.jpg@104w_104h_1e_1c.webp |
-| Specified height, webp format (smallest)     | baseURL/1.jpg@104w_104h_1e_1c.webp |
+| Type                         | Url                                |
+| ---------------------------- | ---------------------------------- |
+| 原图                         | baseURL/1.jpg                      |
+| 原分辨率，质量压缩           | baseURL/1.jpg@1e_1c.jpg            |
+| 规定宽，高度自适应，质量压缩 | baseURL/1.jpg@104w_1e_1c.jpg       |
+| 规定高，宽度自适应，质量压缩 | baseURL/1.jpg@104h_1e_1c.jpg       |
+| 规定高宽，质量压缩           | baseURL/1.jpg@104w_104h_1e_1c.jpg  |
+| 原分辨率，webp格式(占用最小) | baseURL/1.jpg@104w_104h_1e_1c.webp |
+| 规定高度，webp格式(占用最小) | baseURL/1.jpg@104w_104h_1e_1c.webp |
 
-Format: (original image URL)@(\d+[whsepqoc]\_?)\*(\.(|webp|gif|png|jpg|jpeg))?$
+格式：(图像原链接)@(\d+[whsepqoc]\_?)\*(\.(|webp|gif|png|jpg|jpeg))?$
 
-- w:[1, 9223372036854775807] (width, image width)
-- h:[1, 9223372036854775807] (height, image height)
-- s:[1, 9223372036854775807] (unknown function)
-- e:[0,2] (resize, 0:maintain ratio take smaller, 1:maintain ratio take larger, 2:don't maintain original ratio, don't mix with c)
-- p:[1,1000] (default 100, magnification, don't mix with c)
-- q:[1,100] (quality, default 75, image quality)
-- o:[0,1] (unknown function)
-- c:[0,1] (clip, 0:default, 1:crop)
-- webp,png,jpeg,gif (keeps original format if not specified)
-- Case insensitive, same parameters later override earlier ones
-- The actual w*h after calculation cannot be greater than the original w*h, otherwise the wh parameter is ineffective
+- w:[1, 9223372036854775807] (width，图像宽度)
+- h:[1, 9223372036854775807] (height，图像高度)
+- s:[1, 9223372036854775807] (作用未知)
+- e:[0,2] (resize，0:保留比例取其小，1:保留比例取其大，2:不保留原比例，不与c混用)
+- p:[1,1000] (默认100，放大倍数，不与c混用)
+- q:[1,100] (quality，默认75，图像质量)
+- o:[0,1] (作用未知)
+- c:[0,1] (clip，0:默认，1:裁剪)
+- webp,png,jpeg,gif(不加则保留原格式)
+- 不区分大小写，相同的参数后面覆盖前面
+- 计算后的实际w*h不能大于原w*h，否则wh参数失效
 
-### Hotlinking Prevention Solutions
+### 防盗链解决方案
 
-#### Site-wide Image Usage
+#### 全站图片使用
 
-Add the following tag in the HTML head, so all resource references won't carry the referrer
+在html的head标签中设置如下标志，那么全站资源引用都不会携带referrer
 
 ```html
 <meta name="referrer" content="no-referrer" />
 ```
 
-#### Opening in New Window
+#### 新窗口打开
 
-Set rel="noreferrer". Note that using window.open will carry the referrer by default, and the first access might still return a 403 error
+主要设置rel="noreferrer"，使用window.open打开的话是会默认携带referrer的，第一次还是会403
 
 ```html
 <a rel="noreferrer" target="_blank"></a>
 ```
 
-## Project Structure
-
-```
-king-images/
-├── src/                    # Source code
-│   ├── api/                # API interfaces
-│   ├── components/         # Components
-│   ├── db/                 # Database related
-│   ├── hooks/              # Custom Hooks
-│   ├── pages/              # Pages
-│   │   ├── Login/          # Login page
-│   │   ├── Upload/         # Upload page
-│   │   └── Welcome.tsx     # Welcome page
-│   ├── types/              # Type definitions
-│   └── utils/              # Utility functions
-├── public/                 # Static resources
-└── ...                     # Other configuration files
-```
-
-## Tech Stack
-
-- **Frontend Framework**: React
-- **UI Components**: Shadcn UI
-- **State Management**: React Hooks
-- **Data Storage**: Dexie.js (IndexedDB)
-- **Build Tool**: Vite
-- **Styling Solution**: Tailwind CSS
-
-## Contribution Guidelines
-
-Issues and code contributions are welcome! Please follow these steps:
-
-1. Fork the project
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
+## 许可证
 
 [MIT](LICENSE)
 
-## Contact
+## 联系方式
 
-If you have any questions or suggestions, please contact us:
+如有任何问题或建议，请通过以下方式联系我们：
 
-- Project Repository: [https://github.com/Coder-King3/king-images](https://github.com/Coder-King3/king-images)
-- Email: w2196592083@gmail.com
+- 项目仓库：[https://github.com/Coder-King3/king-images](https://github.com/Coder-King3/king-images)
+- 电子邮件：w2196592083@gmail.com
 
-## Acknowledgements
+## 致谢
 
-> This project has received support and help from the following projects, for which we express our sincere gratitude!
+> 本项目得到以下项目的支持与帮助，在此表示衷心的感谢！
 
-#### Image Upload Functionality
+#### 图片上传功能
 
-- **Project**: [bilibili-img-uploader](https://github.com/xlzy520/bilibili-img-uploader)
-- **Contribution**: Provided image upload solutions based on Bilibili API
-- **Author**: [@xlzy520](https://github.com/xlzy520)
+- **项目**: [bilibili-img-uploader](https://github.com/xlzy520/bilibili-img-uploader)
+- **贡献**: 提供了基于 B站 API 的图片上传解决方案
+- **作者**: [@xlzy520](https://github.com/xlzy520)
 
-#### QR Code Login and User Information Retrieval
+#### 二维码登录和用户信息获取
 
-- **Project**: [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
-- **Contribution**: Provided complete Bilibili API documentation and implementation solutions for QR code login, user information retrieval, and other functions
-- **Author**: [@SocialSisterYi](https://github.com/SocialSisterYi)
+- **项目**: [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
+- **贡献**: 提供了完整的 B站 API 接口文档和实现方案，为二维码登录、用户信息获取等功能提供了技术支持
+- **作者**: [@SocialSisterYi](https://github.com/SocialSisterYi)
 
 ---
 
-[中文文档](README_zh.md)
+[English Documentation](README.md)
