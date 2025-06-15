@@ -52,7 +52,7 @@ const userConfig = {
       },
       {
         emoji: '📦️',
-        name: '构建:   📦️ 构建流程、外部依赖变更 (如升级 npm 包、修改打包配置等)',
+        name: 'build:   📦️ 构建流程、外部依赖变更 (如升级 npm 包、修改打包配置等)',
         value: 'build'
       },
       { emoji: '🎡', name: 'ci:   🎡 修改 CI 配置、脚本', value: 'ci' },

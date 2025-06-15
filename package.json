@@ -24,7 +24,7 @@
     "dev": "pnpm vite --mode development",
     "build": "pnpm vite build --mode production",
     "lint": "eslint \"**/*.{ts,tsx}\" --fix",
-    "prettier": "prettier --write --log-level warn \"**/*.{ts,tsx,css,json}\"",
+    "prettier": "prettier --write --log-level warn \"**/*.{cjs,js,ts,tsx,css,json}\"",
     "commit": "git-cz",
     "lint-staged": "lint-staged --config lint-staged.config.cjs",
     "commitlint": "commitlint --config commitlint.config.cjs -e -V"
