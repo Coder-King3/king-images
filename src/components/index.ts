@@ -1,2 +1,5 @@
 // export * from './ui'
 export { default as Container } from './Container'
+export { default as Image } from './Image'
+export * from './ImagePreview'
+export { default as Transition } from './Transition'

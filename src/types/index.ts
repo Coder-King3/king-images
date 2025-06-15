@@ -1,2 +1,2 @@
-export * from './iamges'
+export * from './images'
 export * from './upload'

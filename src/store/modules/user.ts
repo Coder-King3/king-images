@@ -57,7 +57,7 @@ const useUserStore = create<UserStore>()(
           const response = await getSpaceInfo()
 
           // 已经通过alova的responded拦截器处理，直接使用返回值
-          if (response && response.code === 0) {
+          if (response.code === 0 && response.data) {
             const { face, mid, name, sign } = response.data
 
             set({

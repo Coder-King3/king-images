@@ -21,9 +21,13 @@ export default defineConfig({
       '/api': {
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        target: 'http://localhost:5320/api'
-        // target: 'https://api.bilibili.com'
+        target: 'http://localhost:3068/images-api'
       },
+      // '/api': {
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/api/, ''),
+      //   target: 'http://localhost:3080/api'
+      // },
       '/passport': {
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/passport/, ''),

@@ -1,44 +1,49 @@
-import { Container } from '@/components'
+import { Container, Transition } from '@/components'
 import { Button } from '@/components/ui/button'
 import { APP_NAME } from '@/constants'
 import { Logo as LogoIcon } from '@/icons'
+import { cn } from '@/utils'
 
-/** @jsxImportSource @emotion/react */
-import { css, keyframes } from '@emotion/react'
+import { css, keyframes } from '@emotion/css'
 import { useNavigate } from 'react-router'
 
-const styles = {
-  image: css({
-    '@media (min-width: 960px)': {
-      flexGrow: 1,
-      margin: 0,
-      minHeight: '100%',
-      order: 2
-    }
-  }),
-  imageBg: css({
-    backgroundImage:
-      'radial-gradient(circle at center, #17ead9 0%, #2ee6d6 25%, #4592e6 50%, #5674ea 75%, #6078ea 100%)',
-    borderRadius: '50%',
-    filter: 'blur(72px)',
-    height: '320px',
-    left: '50%',
-    position: 'absolute',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '320px'
-  }),
-  imageContainer: css({
-    '@media (min-width: 960px)': {
-      alignItems: 'center',
-      display: 'flex',
-      height: '100%',
-      justifyContent: 'center',
-      transform: 'translate(-32px, -32px)',
-      width: '100%'
-    }
-  })
-}
+const logoContainerCss = css`
+  @media (min-width: 960px) {
+    flex-grow: 1;
+    margin: 0;
+    min-height: 100%;
+    order: 2;
+  }
+`
+const logoWrapperCss = css`
+  @media (min-width: 960px) {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    transform: translate(-32px, -32px);
+    width: 100%;
+  }
+`
+
+const logoBackgroundCss = css`
+  background-image: radial-gradient(
+    circle at center,
+    #17ead9 0%,
+    #2ee6d6 25%,
+    #4592e6 50%,
+    #5674ea 75%,
+    #6078ea 100%
+  );
+  border-radius: 50%;
+  filter: blur(72px);
+  height: 320px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+`
 
 // 创建平滑的浮动动画
 const createFloatAnimation = (offsetX: number, offsetY: number) =>
@@ -64,6 +69,52 @@ const createFloatAnimation = (offsetX: number, offsetY: number) =>
     opacity: 0.4;
   }
 `
+
+/* 
+  cx、css 和 cn 详解
+  
+  1. Emotion Css
+  1.1 Emotion (css) 【css 函数返回样式生成的类名】
+  className={css({
+    color: textColor,
+    fontSize: `${size}px`,
+    transition: 'all 0.3s',
+    '&:hover': {
+      color: hoverColor
+    },
+    [breakpoint]: {
+      fontSize: `${smallSize}px`
+    }
+  })}
+  
+  1.2 Emotion cx
+    cx可以检测 Emotion 生成的类名，确保样式按正确的顺序覆盖。
+    Emotion 生成的样式从左到右应用。后续样式会覆盖先前样式的属性值。
+  className={cx(
+    css({
+      fontSize: '20px',
+      background: 'green'
+    }),
+    css({
+      fontSize: '20px',
+      background: 'blue'
+    })
+  )}
+  
+  
+  2. Tailwind 和 Emotion 混合使用
+  2.1 单个Emotion css 的情况
+  className={cn("tailwind类名", css({ animation: `${animation} 2s` }))}
+  
+  2.2 多个Emotion css 的情况
+  className={cn(
+    "tailwind类名",
+    cx(
+      css({ animation: `${animation} 2s` }),
+      css({ animation: `${animation} 2s` })
+    )
+  )}
+*/
 
 interface ImagesLogoProps {
   logoColor?: {
@@ -144,9 +195,8 @@ function ImagesLogo({
         return (
           <div
             key={particle.id}
-            className="absolute rounded-full"
-            css={css({
-              animation: `${floatAnimation} ${particle.duration}s ease-in-out infinite`,
+            className={`absolute rounded-full ${css({
+              animation: `${floatAnimation} ${particle.duration}s infinite ease-in-out`,
               animationDelay: `${particle.delay}s`,
               background: `radial-gradient(circle, ${particleColor[0]}, ${particleColor[1]})`,
               height: `${particle.size}px`,
@@ -155,7 +205,7 @@ function ImagesLogo({
               transform: 'translate(-50%, -50%)',
               width: `${particle.size}px`,
               willChange: 'transform, opacity' // 优化性能
-            })}
+            })}`}
           />
         )
       })}
@@ -213,72 +263,80 @@ function Welcome() {
   const navigate = useNavigate()
 
   function toUpload() {
-    navigate('/upload')
+    navigate('/upload?tab=upload')
   }
 
+  // container mx-auto max-w-7xl px-4 py-6
+
   return (
-    <Container className="max-w-[1152px] min-lg:px-0">
-      <div className="flex flex-col items-center pt-20 pb-14 text-center md:flex-row md:text-left">
-        <div className="relative z-10 order-2 w-[calc((100%_/_3)_*_2)] max-md:w-full min-[960px]:max-w-[592px] md:order-1 md:items-start">
-          <h1 className="flex flex-col text-[56px] leading-[64px] font-bold tracking-[-.4px]">
-            <span className="h-[70px] bg-gradient-to-r from-[#2f88ff] to-[#6078ea] bg-clip-text text-transparent">
-              {imagesIntro.name}
-            </span>
-            <span className="whitespace-pre-wrap text-gray-800">
-              {imagesIntro.description}
-            </span>
-          </h1>
-          <p className="mt-3 text-[24px] leading-[36px] text-[#67676c]">
-            {imagesIntro.tagline}
-          </p>
-          <div className="flex pt-8 max-md:justify-center">
-            <Button
-              size="lg"
-              onClick={toUpload}
-              className="bg-primary h-[45px] w-40 rounded-full border border-[#5c7cfa] text-[16px] font-bold shadow-md transition-colors hover:border-transparent hover:bg-[#2979f2]"
-            >
-              开始使用
-            </Button>
-          </div>
-        </div>
-
-        {/* 右侧光晕 Logo */}
-        <div className="image order-1" css={styles.image}>
-          <div
-            className="image-container relative mx-auto size-[320px] min-sm:size-[392px]"
-            css={styles.imageContainer}
-          >
-            <div
-              className="image-bg size-[192px] min-sm:size-[256px]"
-              css={styles.imageBg}
-            ></div>
-
-            <ImagesLogo
-              size={160}
-              particleCount={16}
-              logoColor={{
-                fillColor: '#3B82F6',
-                strokeColor: '#1E40AF'
-              }}
-              particleColor={['#3B82F6', '#1E40AF']}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 pb-15 md:grid-cols-2 lg:grid-cols-3">
-        {features.map((feature, index) => (
-          <div key={index} className="rounded-lg bg-[#f6f6f7] p-6">
-            <h2 className="text-[16px] leading-6 font-bold text-[#3c3c43]">
-              {`${feature.icon} ${feature.title}`}
-            </h2>
-            <p className="pt-2 text-sm leading-6 text-[#67676c]">
-              {feature.description}
+    <Transition>
+      <Container className="max-w-[1152px] px-4 min-lg:px-0">
+        <div className="flex flex-col items-center pt-20 pb-14 text-center md:flex-row md:text-left">
+          <div className="relative z-10 order-2 w-[calc((100%_/_3)_*_2)] max-md:w-full min-[960px]:max-w-[592px] md:order-1 md:items-start">
+            <h1 className="flex flex-col text-[56px] leading-[64px] font-bold tracking-[-.4px]">
+              <span className="h-[70px] bg-gradient-to-r from-[#2f88ff] to-[#6078ea] bg-clip-text text-transparent">
+                {imagesIntro.name}
+              </span>
+              <span className="whitespace-pre-wrap text-gray-800">
+                {imagesIntro.description}
+              </span>
+            </h1>
+            <p className="mt-3 text-[24px] leading-[36px] text-[#67676c]">
+              {imagesIntro.tagline}
             </p>
+            <div className="flex pt-8 max-md:justify-center">
+              <Button
+                size="lg"
+                onClick={toUpload}
+                className="bg-primary h-[45px] w-40 rounded-full border border-[#5c7cfa] text-[16px] font-bold shadow-md transition-colors hover:border-transparent hover:bg-[#2979f2]"
+              >
+                开始使用
+              </Button>
+            </div>
           </div>
-        ))}
-      </div>
-    </Container>
+
+          {/* 右侧光晕 Logo */}
+          <div className={cn('image order-1', logoContainerCss)}>
+            <div
+              className={cn(
+                'image-container relative mx-auto size-[320px] min-sm:size-[392px]',
+                logoWrapperCss
+              )}
+            >
+              <div
+                className={cn(
+                  'image-bg size-[192px] min-sm:size-[256px]',
+                  logoBackgroundCss
+                )}
+              ></div>
+
+              <ImagesLogo
+                size={160}
+                particleCount={16}
+                logoColor={{
+                  fillColor: '#3B82F6',
+                  strokeColor: '#1E40AF'
+                }}
+                particleColor={['#3B82F6', '#1E40AF']}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 pb-15 md:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature, index) => (
+            <div key={index} className="rounded-lg bg-[#f6f6f7] p-6">
+              <h2 className="text-[16px] leading-6 font-bold text-[#3c3c43]">
+                {`${feature.icon} ${feature.title}`}
+              </h2>
+              <p className="pt-2 text-sm leading-6 text-[#67676c]">
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </Transition>
   )
 }
 

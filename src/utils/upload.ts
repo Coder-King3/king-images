@@ -82,8 +82,23 @@ export const uploadBatch = async (
   const totalBytes = files.reduce((sum, file) => sum + file.size, 0)
   let uploadedBytes = 0
 
-  const updateProgress = (currentFile: File) => {
+  // 为每个文件创建虚拟进度存储
+  const fileProgress = new Map<File, number>()
+  files.forEach((file) => fileProgress.set(file, 0))
+
+  // 虚拟进度定时器存储
+  const progressIntervals = new Map<File, NodeJS.Timeout>()
+
+  const updateProgress = (currentFile: File, filePercent = 100) => {
     if (!onProgress) return
+
+    // 更新当前文件的进度
+    fileProgress.set(currentFile, filePercent)
+
+    // 计算总体进度
+    const totalProgress = files.reduce((sum, file) => {
+      return sum + (fileProgress.get(file) || 0) * (file.size / totalBytes)
+    }, 0)
 
     const current = result.successCount + result.failedCount
     const elapsedTime = Date.now() - startTime
@@ -95,12 +110,43 @@ export const uploadBatch = async (
       current,
       currentFileName: currentFile.name,
       failed: result.failedCount,
-      percent: (current / files.length) * 100,
+      percent: totalProgress,
       remainingTime,
       speed,
       success: result.successCount,
       total: files.length
     })
+  }
+
+  // 为单个文件创建虚拟进度
+  const startVirtualProgress = (file: File): void => {
+    // 清除可能存在的旧定时器
+    if (progressIntervals.has(file)) {
+      clearInterval(progressIntervals.get(file)!)
+    }
+
+    let progress = 0
+    const interval = setInterval(() => {
+      // 虚拟进度最多到95%，留5%给实际完成时
+      if (progress < 95) {
+        // 随着进度增加，增长速度变慢
+        const increment = (100 - progress) / 20
+        progress += Math.min(increment, 10)
+        updateProgress(file, progress)
+      } else {
+        clearInterval(interval)
+      }
+    }, 300)
+
+    progressIntervals.set(file, interval)
+  }
+
+  // 清除文件的虚拟进度
+  const stopVirtualProgress = (file: File): void => {
+    if (progressIntervals.has(file)) {
+      clearInterval(progressIntervals.get(file)!)
+      progressIntervals.delete(file)
+    }
   }
 
   // 创建上传队列
@@ -111,10 +157,16 @@ export const uploadBatch = async (
     if (queue.length === 0) return
 
     const file = queue.shift()!
-    updateProgress(file)
+
+    // 启动虚拟进度
+    startVirtualProgress(file)
+    updateProgress(file, 0)
 
     try {
       const uploadResult = await upload(file)
+      // 停止虚拟进度并设置为100%
+      stopVirtualProgress(file)
+
       if (uploadResult.success && uploadResult.data) {
         result.success.push(uploadResult.data)
         result.successCount++
@@ -123,6 +175,9 @@ export const uploadBatch = async (
         throw new Error(uploadResult.message)
       }
     } catch (error) {
+      // 停止虚拟进度并设置为100%
+      stopVirtualProgress(file)
+
       result.failed.push({
         errorMessage:
           error instanceof Error ? error.message : '上传失败，请稍后重试',
@@ -132,7 +187,8 @@ export const uploadBatch = async (
       uploadedBytes += file.size
     }
 
-    updateProgress(file)
+    // 无论成功失败，最终都将进度设为100%
+    updateProgress(file, 100)
 
     // 继续处理队列中的下一个文件
     if (queue.length > 0) {
@@ -153,8 +209,8 @@ export const uploadBatch = async (
   // 等待所有上传完成
   await Promise.all(executing)
 
-  // 最后一次进度更新
-  updateProgress(files[files.length - 1])
+  // 清理所有可能剩余的进度定时器
+  progressIntervals.forEach((interval) => clearInterval(interval))
 
   return result
 }

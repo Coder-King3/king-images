@@ -1,14 +1,14 @@
-import { useScroll } from 'ahooks'
 import { useMemo } from 'react'
+import { useWindowScroll } from 'react-use'
 
-export const useIsTop = () => {
-  const scroll = useScroll()
+export const useIsTop = (threshold = 30) => {
+  // 使用react-use提供的useWindowScroll监听窗口滚动
+  const { y } = useWindowScroll()
 
-  // 使用 useMemo 记忆化计算结果，避免不必要的重渲染
+  // 使用useMemo避免不必要的重新计算
   const isTop = useMemo(() => {
-    // 添加空值检查，确保 scroll 和 scroll.top 都存在
-    return (scroll?.top ?? 0) < 30
-  }, [scroll?.top])
+    return (y ?? 0) < threshold
+  }, [y, threshold])
 
   return isTop
 }

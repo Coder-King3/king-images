@@ -23,6 +23,7 @@ const alova = createAlova({
     // axios已自动解析JSON，所以直接返回data即可
     return response.data
   },
+  // 状态钩子函数，用于定义和更新指定MVVM库的状态
   statesHook: ReactHook
 })
 

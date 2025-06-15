@@ -10,6 +10,7 @@ import {
 import { useUserStore } from '@/store'
 
 import { Home, LogIn, Upload, User as UserIcon } from 'lucide-react'
+import { memo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 // 定义UserInfo类型
@@ -54,19 +55,26 @@ function LoginButton() {
 }
 
 // 用户下拉菜单组件
-interface DropdownCardProps {
+interface CardProps {
   userInfo: null | UserInfo
 }
 
-function DropdownCard({ userInfo }: DropdownCardProps) {
+const Card = memo(({ userInfo }: CardProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const goToBilibili = () => {
     window.open('https://www.bilibili.com/', '_blank')
   }
 
-  const goToUpload = () => {
-    navigate('/upload')
+  const goToUpload = (tab: 'gallery' | 'upload') => {
+    if (location.pathname === '/upload') {
+      // 如果已经在上传页面，则通过修改URL并重新加载页面来切换标签
+      window.location.href = `/upload?tab=${tab}`
+    } else {
+      // 如果不在上传页面，则使用navigate进行导航
+      navigate(`/upload?tab=${tab}`)
+    }
   }
 
   return (
@@ -98,12 +106,20 @@ function DropdownCard({ userInfo }: DropdownCardProps) {
           <div className="border-t pt-3">
             <div className="flex flex-col space-y-1">
               <Button
-                onClick={goToUpload}
+                onClick={() => goToUpload('upload')}
                 variant="ghost"
                 className="justify-start px-2 text-sm"
               >
                 <Upload className="mr-2 h-4 w-4" />
                 上传图片
+              </Button>
+              <Button
+                onClick={() => goToUpload('gallery')}
+                variant="ghost"
+                className="justify-start px-2 text-sm"
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                图片库
               </Button>
               <Button
                 onClick={goToBilibili}
@@ -119,15 +135,13 @@ function DropdownCard({ userInfo }: DropdownCardProps) {
       </HoverCardContent>
     </HoverCard>
   )
-}
+})
 
 // 主组件
-function UserDropdown() {
+const UserCard = memo(() => {
   const { loggedIn, userInfo } = useUserStore()
 
-  return (
-    <>{loggedIn ? <DropdownCard userInfo={userInfo} /> : <LoginButton />}</>
-  )
-}
+  return <>{loggedIn ? <Card userInfo={userInfo} /> : <LoginButton />}</>
+})
 
-export default UserDropdown
+export default UserCard

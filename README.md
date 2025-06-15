@@ -15,8 +15,19 @@ King Images is a powerful image upload and management tool that supports various
 
 ### Image Management
 
-- **Image Gallery**: Centralized management of all uploaded image resources
-- **Quick Copy**: One-click copying of Markdown format and WebP links
+- **Smart Gallery**: Adaptive grid layout that optimizes display based on image proportions
+- **Preview Function**: Support for enlarged image previews, providing a smooth browsing experience
+- **Format Conversion**: One-click copying in original, WebP, Markdown, and custom formats
+
+### Data Import and Export
+
+- **Data Backup**: One-click export of all image data to JSON files
+- **Quick Recovery**: Support for importing backup data with automatic handling of duplicate IDs
+
+### User Experience
+
+- **Login Methods**: Support for QR code scanning login and username/password login
+- **Responsive Design**: Adapts to different device screens, providing a consistent user experience
 - **Local Storage**: Uses IndexedDB to store image information in the browser, no server required
 
 ## Installation and Usage
@@ -80,6 +91,50 @@ pnpm build
    - Click on an image to copy the corresponding format link (Markdown or WebP)
    - You can delete or manage images as needed
 
+### Image Formats
+
+| Type                                         | Url                                |
+| -------------------------------------------- | ---------------------------------- |
+| Original image                               | baseURL/1.jpg                      |
+| Original resolution, quality compression     | baseURL/1.jpg@1e_1c.jpg            |
+| Specified width, adaptive height, compressed | baseURL/1.jpg@104w_1e_1c.jpg       |
+| Specified height, adaptive width, compressed | baseURL/1.jpg@104h_1e_1c.jpg       |
+| Specified dimensions, compressed             | baseURL/1.jpg@104w_104h_1e_1c.jpg  |
+| Original resolution, webp format (smallest)  | baseURL/1.jpg@104w_104h_1e_1c.webp |
+| Specified height, webp format (smallest)     | baseURL/1.jpg@104w_104h_1e_1c.webp |
+
+Format: (original image URL)@(\d+[whsepqoc]\_?)\*(\.(|webp|gif|png|jpg|jpeg))?$
+
+- w:[1, 9223372036854775807] (width, image width)
+- h:[1, 9223372036854775807] (height, image height)
+- s:[1, 9223372036854775807] (unknown function)
+- e:[0,2] (resize, 0:maintain ratio take smaller, 1:maintain ratio take larger, 2:don't maintain original ratio, don't mix with c)
+- p:[1,1000] (default 100, magnification, don't mix with c)
+- q:[1,100] (quality, default 75, image quality)
+- o:[0,1] (unknown function)
+- c:[0,1] (clip, 0:default, 1:crop)
+- webp,png,jpeg,gif (keeps original format if not specified)
+- Case insensitive, same parameters later override earlier ones
+- The actual w*h after calculation cannot be greater than the original w*h, otherwise the wh parameter is ineffective
+
+### Hotlinking Prevention Solutions
+
+#### Site-wide Image Usage
+
+Add the following tag in the HTML head, so all resource references won't carry the referrer
+
+```html
+<meta name="referrer" content="no-referrer" />
+```
+
+#### Opening in New Window
+
+Set rel="noreferrer". Note that using window.open will carry the referrer by default, and the first access might still return a 403 error
+
+```html
+<a rel="noreferrer" target="_blank"></a>
+```
+
 ## Project Structure
 
 ```
@@ -126,8 +181,24 @@ Issues and code contributions are welcome! Please follow these steps:
 
 If you have any questions or suggestions, please contact us:
 
-- Project Repository: [https://github.com/yourusername/king-images](https://github.com/yourusername/king-images)
-- Email: your.email@example.com
+- Project Repository: [https://github.com/Coder-King3/king-images](https://github.com/Coder-King3/king-images)
+- Email: w2196592083@gmail.com
+
+## Acknowledgements
+
+> This project has received support and help from the following projects, for which we express our sincere gratitude!
+
+#### Image Upload Functionality
+
+- **Project**: [bilibili-img-uploader](https://github.com/xlzy520/bilibili-img-uploader)
+- **Contribution**: Provided image upload solutions based on Bilibili API
+- **Author**: [@xlzy520](https://github.com/xlzy520)
+
+#### QR Code Login and User Information Retrieval
+
+- **Project**: [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
+- **Contribution**: Provided complete Bilibili API documentation and implementation solutions for QR code login, user information retrieval, and other functions
+- **Author**: [@SocialSisterYi](https://github.com/SocialSisterYi)
 
 ---
 

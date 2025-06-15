@@ -1,38 +1,45 @@
 import { Container } from '@/components'
 import { useIsTop } from '@/hooks'
+import { cn } from '@/utils'
+
+import { memo } from 'react'
 
 import Logo from './Logo'
-import UserDropdown from './UserDropdown'
+import UserCard from './UserCard'
 
 interface HeaderProps {
   height: number
 }
 
-export const Header = ({ height }: HeaderProps) => {
+const Header = memo(({ height }: HeaderProps) => {
   const isTop = useIsTop()
 
   return (
     <header
-      className={`${
+      className={cn(
+        'sticky top-0 z-50 w-full border-b-[0.8px] backdrop-blur transition-all duration-200 select-none min-lg:px-0',
         isTop
           ? 'bg-transparent'
-          : 'bg-background/95 supports-[backdrop-filter]:bg-background/60'
-      } sticky top-0 z-50 w-full border-b-[0.8px] backdrop-blur transition-all duration-200 select-none ${
+          : 'bg-background/95 supports-[backdrop-filter]:bg-background/60',
         isTop ? 'border-transparent' : 'border-gray-200 dark:border-gray-800'
-      } w-full`}
+      )}
     >
       <Container
-        className="flex items-center justify-between xl:px-6"
+        className="flex max-w-[1400px] items-center justify-between px-4 xl:px-6"
         style={{ height: `${height}px` }}
       >
         <Logo />
 
         <div className="flex items-center gap-2">
-          <UserDropdown></UserDropdown>
+          <UserCard></UserCard>
         </div>
       </Container>
     </header>
   )
-}
+})
+
+/* 
+background-image: radial-gradient(rgba(0, 0, 0, 0) 1px, var(--background) 1px);
+*/
 
 export default Header

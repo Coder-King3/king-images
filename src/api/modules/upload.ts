@@ -17,11 +17,12 @@ export namespace UploadApi {
 /**
  * 上传图片到哔哩哔哩图床
  */
-const uploadImage = (formData: FormData) =>
-  alova.Post<UploadApi.UploadImageResult>(API.UPLOAD_IMAGE, formData, {
+const uploadImage = (formData: FormData) => {
+  return alova.Post<UploadApi.UploadImageResult>(API.UPLOAD_IMAGE, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
   })
+}
 
 export { uploadImage }

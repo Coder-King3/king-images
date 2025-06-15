@@ -1,6 +1,6 @@
 const layoutConfig = {
   footer: {
-    isHomeShow: true
+    show: true
   },
   header: {
     height: 64

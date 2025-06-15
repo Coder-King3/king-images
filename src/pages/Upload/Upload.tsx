@@ -1,42 +1,60 @@
+import { Transition } from '@/components'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { useSearchParams } from 'react-router'
 
 import ImageGallery from './ImageGallery'
+import ImageImportExport from './ImageImportExport'
 import ImageUpload from './ImageUpload'
 
-function Upload() {
-  const [activeTab, setActiveTab] = useState('upload')
+type UploadTab = 'gallery' | 'upload'
 
-  const isUploadTab = useMemo(() => activeTab === 'upload', [activeTab])
+function Upload() {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const [activeTab, setActiveTab] = useState<UploadTab>(
+    (searchParams.get('tab') as UploadTab) || 'upload'
+  )
+
+  function handleTabChange(value: string) {
+    setSearchParams({ tab: value })
+    setActiveTab(value as UploadTab)
+  }
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-6">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-        <TabsList>
-          <TabsTrigger value="upload">图片上传</TabsTrigger>
-          <TabsTrigger value="gallery">图片库</TabsTrigger>
-        </TabsList>
-
-        {/* 文件上传 */}
-        <TabsContent
-          className={!isUploadTab ? 'hidden' : undefined}
-          value="upload"
-          forceMount
+    <Transition>
+      <div className="container mx-auto max-w-7xl px-4 py-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={handleTabChange}
+          className="relative mb-6"
         >
-          <ImageUpload />
-        </TabsContent>
+          {/* tab切换 */}
+          <TabsList>
+            <TabsTrigger value="upload">图片上传</TabsTrigger>
+            <TabsTrigger value="gallery">图片库</TabsTrigger>
+          </TabsList>
 
-        {/* 图片库 */}
-        <TabsContent
-          className={isUploadTab ? 'hidden' : undefined}
-          value="gallery"
-          forceMount
-        >
-          <ImageGallery />
-        </TabsContent>
-      </Tabs>
-    </div>
+          {/* 图片导入导出 */}
+          <ImageImportExport className="absolute top-0 right-0" />
+
+          {/* 文件上传 */}
+          <TabsContent value="upload">
+            <Transition>
+              <ImageUpload />
+            </Transition>
+          </TabsContent>
+
+          {/* 图片库 */}
+          <TabsContent value="gallery">
+            <Transition>
+              <ImageGallery />
+            </Transition>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </Transition>
   )
 }
 

@@ -7,8 +7,6 @@ const API = {
   // 使用 nitro 服务转发
   UPLOAD_IMAGE: `${REQUEST_API_URL}/upload`,
   USER_INFO: `${REQUEST_API_URL}/myinfo`
-  // UPLOAD_IMAGE: `${REQUEST_API_URL}/x/upload/web/image`,
-  // USER_INFO: `${REQUEST_API_URL}/x/space/myinfo`
 }
 
 export { API }

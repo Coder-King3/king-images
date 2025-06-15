@@ -1,5 +1,5 @@
 const footerContent = {
-  copyright: 'Copyright © 2025-present CoderKing3',
+  copyright: 'Copyright © 2025-present King3',
   message: 'Released under the MIT License.'
 }
 

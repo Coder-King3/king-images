@@ -23,8 +23,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "jsxImportSource": "@emotion/react",
-
     // path
     "baseUrl": ".",
     "paths": {

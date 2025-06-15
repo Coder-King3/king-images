@@ -1,0 +1,6 @@
+echo Start running pre-commit hook...
+
+# Format and submit code according to lintstagedrc.config.cjs configuration
+pnpm run lint-staged
+
+echo Run pre-commit hook done.

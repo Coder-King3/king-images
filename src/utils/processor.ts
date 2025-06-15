@@ -20,8 +20,8 @@ export const getImgSize = (file: File): Promise<ImageSize> => {
 }
 
 // 将图片转换为 markdown 格式
-export const toMarkdown = (url: string): string => {
-  return `![](${url})`
+export const toMarkdown = (url: string, name: string = ''): string => {
+  return `![${name}](${url})`
 }
 
 // 将图片转换为 webp 格式

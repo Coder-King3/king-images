@@ -1,6 +1,6 @@
 /** 通用响应结构 */
 export interface BaseResponse<T = unknown> {
   code: number
-  data?: T
+  data?: null | T
   message: string
 }
