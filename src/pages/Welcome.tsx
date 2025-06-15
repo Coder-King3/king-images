@@ -5,6 +5,7 @@ import { Logo as LogoIcon } from '@/icons'
 import { cn } from '@/utils'
 
 import { css, keyframes } from '@emotion/css'
+import { motion, useMotionValue, useTransform } from 'framer-motion'
 import { useNavigate } from 'react-router'
 
 const logoContainerCss = css`
@@ -259,6 +260,79 @@ const features = [
   }
 ]
 
+// FeatureCard 组件 - 3D悬停效果
+interface FeatureCardProps {
+  description: string
+  icon: string
+  title: string
+}
+
+function FeatureCard({ description, icon, title }: FeatureCardProps) {
+  // 创建动画值
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  // 转换为旋转角度
+  const rotateX = useTransform(y, [-100, 100], [10, -10])
+  const rotateY = useTransform(x, [-100, 100], [-10, 10])
+
+  // 处理鼠标移动
+  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+    const card = event.currentTarget
+    const rect = card.getBoundingClientRect()
+
+    // 计算鼠标在卡片上的相对位置
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    const posX = event.clientX - centerX
+    const posY = event.clientY - centerY
+
+    // 更新动画值
+    x.set(posX)
+    y.set(posY)
+  }
+
+  // 重置卡片位置
+  function handleMouseLeave() {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <motion.div
+      className="border-border/15 rounded-lg border bg-[#f6f6f7] p-6"
+      initial={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.05)' }}
+      style={{
+        perspective: 1000,
+        rotateX,
+        rotateY,
+        transformStyle: 'preserve-3d'
+      }}
+      whileHover={{
+        boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)',
+        scale: 1.03,
+        transition: { duration: 0.3, ease: 'easeOut' }
+      }}
+      whileTap={{ scale: 0.98 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <motion.h2
+        className="text-[16px] leading-6 font-bold text-[#3c3c43]"
+        style={{ translateZ: 20 }}
+      >
+        {`${icon} ${title}`}
+      </motion.h2>
+      <motion.p
+        className="pt-2 text-sm leading-6 text-[#67676c]"
+        style={{ translateZ: 10 }}
+      >
+        {description}
+      </motion.p>
+    </motion.div>
+  )
+}
+
 function Welcome() {
   const navigate = useNavigate()
 
@@ -323,16 +397,15 @@ function Welcome() {
           </div>
         </div>
 
+        {/* 特点卡片列表 */}
         <div className="grid grid-cols-1 gap-4 pb-15 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
-            <div key={index} className="rounded-lg bg-[#f6f6f7] p-6">
-              <h2 className="text-[16px] leading-6 font-bold text-[#3c3c43]">
-                {`${feature.icon} ${feature.title}`}
-              </h2>
-              <p className="pt-2 text-sm leading-6 text-[#67676c]">
-                {feature.description}
-              </p>
-            </div>
+            <FeatureCard
+              key={index}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+            />
           ))}
         </div>
       </Container>
