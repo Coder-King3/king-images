@@ -21,13 +21,8 @@ export default defineConfig({
       '/api': {
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        target: 'http://localhost:3068/images-api'
+        target: 'http://localhost:3080/api'
       },
-      // '/api': {
-      //   changeOrigin: true,
-      //   rewrite: (path) => path.replace(/^\/api/, ''),
-      //   target: 'http://localhost:3080/api'
-      // },
       '/passport': {
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/passport/, ''),
