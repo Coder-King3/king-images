@@ -1,3 +1,5 @@
+import { BASE_API_URL } from '@/constants'
+
 import { axiosRequestAdapter } from '@alova/adapter-axios'
 import { createAlova } from 'alova'
 import ReactHook from 'alova/react'
@@ -10,6 +12,7 @@ const axiosInstance = axios.create({
 
 // 创建alova实例
 const alova = createAlova({
+  baseURL: BASE_API_URL,
   // 关闭全局缓存
   cacheFor: null,
   // 请求适配器，使用axios请求适配器

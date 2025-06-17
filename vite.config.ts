@@ -18,15 +18,12 @@ export default defineConfig({
     port: 3060,
     proxy: {
       // 使用代理解决跨域问题
-      '/api': {
+      '^/api': {
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        target: 'http://localhost:3080/api'
-      },
-      '/passport': {
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/passport/, ''),
-        target: 'https://passport.bilibili.com'
+        target: 'https://king-images-service.vercel.app/api'
+        // target: 'http://localhost:3080/api'
+        // target: 'http://localhost:3068/images-api'
       }
     }
   }

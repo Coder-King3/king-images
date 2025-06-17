@@ -43,9 +43,10 @@ export namespace UserApi {
  * 需要携带 cookies 来获取登录用户信息
  */
 const getSpaceInfo = async () => {
-  // 使用alova发送请求
   return alova.Get<UserApi.SpaceInfoResult>(API.USER_INFO, {
-    withCredentials: true // 携带跨域Cookie
+    headers: {
+      'X-Certificate-Cookie': document.cookie
+    }
   })
 }
 

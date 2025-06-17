@@ -55,10 +55,13 @@ function CertificatePanel({ toggleButton }: CertificatePanelProps) {
     setIsLoading(true)
 
     // 存储cookie配置
-    setCertificate({
+    await setCertificate({
       bili_jct: data.bili_jct,
       SESSDATA: data.SESSDATA
     })
+
+    console.log('222')
+    console.log(`🚀 document.cookie:`, document.cookie)
 
     const isLogin = await fetchSpaceInfo()
     if (isLogin) {

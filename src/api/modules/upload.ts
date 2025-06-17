@@ -20,7 +20,8 @@ export namespace UploadApi {
 const uploadImage = (formData: FormData) => {
   return alova.Post<UploadApi.UploadImageResult>(API.UPLOAD_IMAGE, formData, {
     headers: {
-      'Content-Type': 'multipart/form-data'
+      'Content-Type': 'multipart/form-data',
+      'X-Certificate-Cookie': document.cookie
     }
   })
 }
