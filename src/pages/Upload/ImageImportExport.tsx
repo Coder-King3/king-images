@@ -2,6 +2,7 @@ import type { ImageInfo } from '@/types'
 
 import { Button } from '@/components/ui'
 import { imagesTable } from '@/db'
+import useIsMobile from '@/hooks/useIsMobile'
 import { cn } from '@/utils'
 
 import { Download, Upload } from 'lucide-react'
@@ -30,6 +31,8 @@ interface ImageImportExportProps {
 }
 
 const ImageImportExport = memo(({ className }: ImageImportExportProps) => {
+  const isMobile = useIsMobile(448)
+
   // 导出图片数据
   const handleExport = useCallback(async () => {
     try {
@@ -157,20 +160,20 @@ const ImageImportExport = memo(({ className }: ImageImportExportProps) => {
     <div className={cn('flex flex-wrap items-center gap-2', className)}>
       <Button
         variant="outline"
-        onClick={handleImport}
+        onClick={handleExport}
         className="flex items-center gap-2"
       >
         <Upload className="size-4" />
-        <span>导入数据</span>
+        {!isMobile && <span>导出数据</span>}
       </Button>
 
       <Button
         variant="outline"
-        onClick={handleExport}
+        onClick={handleImport}
         className="flex items-center gap-2"
       >
         <Download className="size-4" />
-        <span>导出数据</span>
+        {!isMobile && <span>导入数据</span>}
       </Button>
     </div>
   )

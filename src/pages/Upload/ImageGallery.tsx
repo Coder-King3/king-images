@@ -22,7 +22,7 @@ import { cn, toMarkdown, toWebp } from '@/utils'
 
 import { useLiveQuery } from 'dexie-react-hooks'
 import { motion } from 'framer-motion'
-import { CircleHelp, Copy, X, ZoomIn } from 'lucide-react'
+import { CircleHelp, Copy, ImageOff, X, ZoomIn } from 'lucide-react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 // import { toast } from 'sonner'
@@ -182,7 +182,7 @@ const GalleryList = memo((props: GalleryListProps) => {
 
   return (
     <div
-      className="relative z-10 h-[500px] transform-gpu overflow-y-auto overscroll-contain scroll-smooth will-change-scroll"
+      className="relative z-10 max-h-[500px] transform-gpu overflow-y-auto overscroll-contain scroll-smooth will-change-scroll"
       style={{
         contain: 'layout style paint',
         overscrollBehavior: 'contain',
@@ -457,16 +457,27 @@ const ImageGallery = memo(() => {
           </div>
         </div>
         {/* 图片列表 */}
-        {images && (
+        {images && images.length > 0 ? (
           <GalleryList
             handleCopyImage={handleCopy}
             handleOpenPreview={handleOpen}
             images={images}
           />
+        ) : (
+          // 暂无图片
+          <div className="flex h-80 flex-col items-center justify-center gap-3 rounded-lg">
+            <ImageOff
+              className="text-muted-foreground/60 size-12"
+              strokeWidth={1.5}
+            />
+            <p className="text-muted-foreground text-sm font-medium">
+              暂无图片
+            </p>
+          </div>
         )}
 
         {/* 图片预览 */}
-        {images && (
+        {images && images.length > 0 && (
           <ImagePreview
             active={active}
             close={handleClose}

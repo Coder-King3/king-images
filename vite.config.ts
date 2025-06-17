@@ -21,9 +21,9 @@ export default defineConfig({
       '^/api': {
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        target: 'https://king-images-service.vercel.app/api'
-        // target: 'http://localhost:3080/api'
-        // target: 'http://localhost:3068/images-api'
+        // target: 'https://king-images-service.vercel.app/api'
+        // target: 'http://localhost:3080/api',
+        target: 'http://192.168.0.104:3080/api'
       }
     }
   }

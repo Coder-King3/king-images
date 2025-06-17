@@ -25,7 +25,8 @@ const Header = memo(({ height }: HeaderProps) => {
       )}
     >
       <Container
-        className="flex max-w-[1400px] items-center justify-between px-4 xl:px-6"
+        className="flex max-w-[1376px] items-center justify-between"
+        wrapperClassName="px-4 min-[768px]:px-8"
         style={{ height: `${height}px` }}
       >
         <Logo />

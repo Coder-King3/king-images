@@ -8,42 +8,171 @@ import { css, keyframes } from '@emotion/css'
 import { motion, useMotionValue, useTransform } from 'framer-motion'
 import { useNavigate } from 'react-router'
 
-const logoContainerCss = css`
+const introContainerCss = css`
   @media (min-width: 960px) {
-    flex-grow: 1;
-    margin: 0;
-    min-height: 100%;
-    order: 2;
-  }
-`
-const logoWrapperCss = css`
-  @media (min-width: 960px) {
-    align-items: center;
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    transform: translate(-32px, -32px);
-    width: 100%;
+    flex-direction: row;
+    text-align: left;
   }
 `
 
-const logoBackgroundCss = css`
-  background-image: radial-gradient(
-    circle at center,
-    #17ead9 0%,
-    #2ee6d6 25%,
-    #4592e6 50%,
-    #5674ea 75%,
-    #6078ea 100%
-  );
-  border-radius: 50%;
-  filter: blur(72px);
-  height: 320px;
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 320px;
+const introMainCss = css`
+  width: 100%;
+
+  @media (min-width: 960px) {
+    width: calc((100% / 3) * 2);
+    order: 1;
+    width: 100%;
+    max-width: 592px;
+    align-items: start;
+  }
+
+  .heading {
+    letter-spacing: -0.4px;
+    font-size: 32px;
+    line-height: 42px;
+
+    @media (min-width: 640px) {
+      line-height: 56px;
+      font-size: 48px;
+    }
+
+    @media (min-width: 960px) {
+      font-size: 56px;
+      line-height: 64px;
+    }
+
+    .title {
+      height: 46px;
+      background: linear-gradient(to right, #2f88ff, #6078ea);
+      background-clip: text;
+      color: transparent;
+
+      @media (min-width: 640px) {
+        height: 64px;
+      }
+
+      @media (min-width: 960px) {
+        height: 70px;
+      }
+    }
+  }
+
+  .tagline {
+    color: #67676c;
+    /* line-height: 32px; */
+    font-size: 18px;
+    margin-top: 8px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+
+    @media (min-width: 640px) {
+      margin-top: 12px;
+      line-height: 32px;
+      font-size: 20px;
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    @media (min-width: 960px) {
+      line-height: 36px;
+      font-size: 24px;
+    }
+  }
+
+  .actions {
+    display: flex;
+    margin-top: 18px;
+
+    @media (min-width: 640px) {
+      margin-top: 32px;
+    }
+
+    @media (max-width: 960px) {
+      justify-content: center;
+    }
+
+    .action {
+      height: 40px;
+      width: 120px;
+      font-size: 14px;
+
+      @media (min-width: 960px) {
+        height: 45px;
+        width: 160px;
+        font-size: 16px;
+      }
+    }
+  }
+`
+
+const introImageCss = css`
+  order: 1;
+  margin: -90px -24px -70px;
+
+  @media (max-width: 640px) {
+    margin: -108px -24px -48px;
+  }
+
+  @media (min-width: 960px) {
+    flex-grow: 1;
+    order: 2;
+    margin: 0;
+    min-height: 100%;
+  }
+
+  .image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    width: 320px;
+    height: 320px;
+
+    @media (min-width: 640px) {
+      width: 392px;
+      height: 392px;
+    }
+
+    @media (min-width: 960px) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      transform: translate(-32px, -32px);
+    }
+  }
+
+  .image-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    width: 192px;
+    height: 192px;
+    background-image: radial-gradient(
+      circle at center,
+      #17ead9 0%,
+      #2ee6d6 25%,
+      #4592e6 50%,
+      #5674ea 75%,
+      #6078ea 100%
+    );
+    filter: blur(72px);
+    transform: translate(-50%, -50%);
+
+    @media (min-width: 640px) {
+      width: 256px;
+      height: 256px;
+    }
+
+    @media (min-width: 960px) {
+      width: 320px;
+      height: 320px;
+    }
+  }
 `
 
 // 创建平滑的浮动动画
@@ -216,14 +345,14 @@ function ImagesLogo({
 
 const imagesIntro = {
   description: '便捷高效的 \n图片托管服务',
-  name: APP_NAME,
   tagline: (
     <span>
       基于哔哩哔哩图床API，为您提供稳定可靠的
       <br />
       图片存储解决方案。简单上传， 永久保存，随时访问。
     </span>
-  )
+  ),
+  title: APP_NAME
 }
 
 const features = [
@@ -340,29 +469,31 @@ function Welcome() {
     navigate('/upload?tab=upload')
   }
 
-  // container mx-auto max-w-7xl px-4 py-6
-
   return (
     <Transition>
-      <Container className="max-w-[1152px] px-4 min-lg:px-0">
-        <div className="flex flex-col items-center pt-20 pb-14 text-center md:flex-row md:text-left">
-          <div className="relative z-10 order-2 w-[calc((100%_/_3)_*_2)] max-md:w-full min-[960px]:max-w-[592px] md:order-1 md:items-start">
-            <h1 className="flex flex-col text-[56px] leading-[64px] font-bold tracking-[-.4px]">
-              <span className="h-[70px] bg-gradient-to-r from-[#2f88ff] to-[#6078ea] bg-clip-text text-transparent">
-                {imagesIntro.name}
-              </span>
-              <span className="whitespace-pre-wrap text-gray-800">
+      <Container
+        className="max-w-[1152px]"
+        wrapperClassName="min-[960px]:px-16 min-sm:px-12 px-4"
+      >
+        <div
+          className={cn(
+            'intro-container flex flex-col items-center pt-20 pb-14 text-center',
+            introContainerCss
+          )}
+        >
+          <div className={cn('main relative z-10 order-2', introMainCss)}>
+            <h1 className="heading flex flex-col font-bold">
+              <span className="title">{imagesIntro.title}</span>
+              <span className="description whitespace-pre-wrap text-gray-800">
                 {imagesIntro.description}
               </span>
             </h1>
-            <p className="mt-3 text-[24px] leading-[36px] text-[#67676c]">
-              {imagesIntro.tagline}
-            </p>
-            <div className="flex pt-8 max-md:justify-center">
+            <p className="tagline">{imagesIntro.tagline}</p>
+            <div className="actions">
               <Button
                 size="lg"
                 onClick={toUpload}
-                className="bg-primary h-[45px] w-40 rounded-full border border-[#5c7cfa] text-[16px] font-bold shadow-md transition-colors hover:border-transparent hover:bg-[#2979f2]"
+                className="action bg-primary rounded-full border border-[#5c7cfa] font-bold shadow-md transition-colors hover:border-transparent hover:bg-[#2979f2]"
               >
                 开始使用
               </Button>
@@ -370,19 +501,9 @@ function Welcome() {
           </div>
 
           {/* 右侧光晕 Logo */}
-          <div className={cn('image order-1', logoContainerCss)}>
-            <div
-              className={cn(
-                'image-container relative mx-auto size-[320px] min-sm:size-[392px]',
-                logoWrapperCss
-              )}
-            >
-              <div
-                className={cn(
-                  'image-bg size-[192px] min-sm:size-[256px]',
-                  logoBackgroundCss
-                )}
-              ></div>
+          <div className={`image ${introImageCss}`}>
+            <div className="image-container">
+              <div className="image-bg"></div>
 
               <ImagesLogo
                 size={160}

@@ -58,11 +58,11 @@ function Login() {
   }
 
   return (
-    <div className="relative flex size-full flex-1 items-center justify-center">
+    <div className="@container relative flex size-full flex-1 items-center justify-center">
       <AnimatePresence initial={false} mode="sync">
         {loginMethod === 'certificate' ? (
           <motion.div
-            className="absolute w-full max-w-[440px]"
+            className="absolute w-full max-w-[440px] @max-md:max-w-full @max-md:px-4"
             key="certificate"
             variants={cardVariants}
             initial="initial"
@@ -80,7 +80,7 @@ function Login() {
           </motion.div>
         ) : (
           <motion.div
-            className="absolute w-full max-w-[440px]"
+            className="absolute w-full max-w-[440px] @max-md:max-w-full @max-md:px-4"
             key="qrcode"
             variants={cardVariants}
             initial="initial"

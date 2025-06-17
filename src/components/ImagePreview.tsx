@@ -1,3 +1,4 @@
+import useIsMobile from '@/hooks/useIsMobile'
 import { cn } from '@/utils'
 
 import { css } from '@emotion/css'
@@ -90,6 +91,10 @@ const FullScreenIcon = ({ className, onClick }: FullScreenIconProps) => {
 }
 
 const DotPagination = ({ currentPage = 1, maxDots = 5, totalPages = 26 }) => {
+  const isMobile = useIsMobile(448)
+
+  if (isMobile) maxDots = 3
+
   // 计算要显示的圆点数量
   const dotsToShow = Math.min(maxDots, totalPages)
 
@@ -103,7 +108,12 @@ const DotPagination = ({ currentPage = 1, maxDots = 5, totalPages = 26 }) => {
   }, [currentPage])
 
   return (
-    <div className="bg-accent-foreground flex h-10 items-center gap-2.5 rounded-full px-6 transition-all duration-300">
+    <div
+      className={cn(
+        'bg-accent-foreground flex h-10 items-center gap-2.5 rounded-full px-6 transition-all duration-300',
+        isMobile && 'px-4'
+      )}
+    >
       {/* 圆点指示器 */}
       <div className="flex gap-1">
         {Array.from({ length: dotsToShow }, (_, index) => (
@@ -149,6 +159,8 @@ export const ImagePreview = memo((options: ImagePreviewProps) => {
     visible = false
   } = options
 
+  const isMobile = useIsMobile(448)
+
   const activePage = useMemo(() => {
     return active + 1
   }, [active])
@@ -189,7 +201,10 @@ export const ImagePreview = memo((options: ImagePreviewProps) => {
               whileHover={{ x: 0 }}
               whileTap={{ x: -3 }}
               transition={{ duration: 0.2 }}
-              className="preview-prev-page bg-accent-foreground text-accent absolute top-1/2 left-0 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tr-md rounded-br-md pl-[3px]"
+              className={cn(
+                'preview-prev-page bg-accent-foreground text-accent absolute left-0 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tr-md rounded-br-md pl-[3px]',
+                isMobile ? 'bottom-3' : 'top-1/2'
+              )}
               onClick={() => onIndexChange(index - 1)}
             >
               <ChevronLeft className="size-7" />
@@ -200,7 +215,10 @@ export const ImagePreview = memo((options: ImagePreviewProps) => {
               whileHover={{ x: 0 }}
               whileTap={{ x: 3 }}
               transition={{ duration: 0.2 }}
-              className="preview-next-page bg-accent-foreground text-accent absolute top-1/2 right-0 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tl-md rounded-bl-md pr-[3px]"
+              className={cn(
+                'preview-next-page bg-accent-foreground text-accent absolute right-0 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tl-md rounded-bl-md pr-[3px]',
+                isMobile ? 'bottom-3' : 'top-1/2'
+              )}
               onClick={() => onIndexChange(index + 1)}
             >
               <ChevronRight className="size-7" />
@@ -253,16 +271,18 @@ export const ImagePreview = memo((options: ImagePreviewProps) => {
                     onClick={() => onScale(scale + 0.5)}
                   />
                 </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ damping: 20, stiffness: 300, type: 'spring' }}
-                >
-                  <FullScreenIcon
-                    className="size-6 cursor-pointer"
-                    onClick={toggleFullScreen}
-                  />
-                </motion.div>
+                {!isMobile && (
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ damping: 20, stiffness: 300, type: 'spring' }}
+                  >
+                    <FullScreenIcon
+                      className="size-6 cursor-pointer"
+                      onClick={toggleFullScreen}
+                    />
+                  </motion.div>
+                )}
                 <motion.div
                   whileHover={{ rotate: 90, scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}

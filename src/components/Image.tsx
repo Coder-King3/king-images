@@ -1,5 +1,4 @@
 import { ANIMATION_EASE } from '@/constants'
-import useIsMobile from '@/hooks/useIsMobile'
 import { cn } from '@/utils'
 
 import { AnimatePresence, motion, useAnimation } from 'framer-motion'
@@ -37,8 +36,7 @@ const Image = ({
   const [error, setError] = useState(false)
   const animate = useAnimation()
   const placeholderAnimate = useAnimation()
-  const isMobile = useIsMobile()
-  const isAnimate = animation && !isMobile
+  const isAnimate = animation
   useEffect(() => setError(false), [src])
 
   const onLoad = async () => {

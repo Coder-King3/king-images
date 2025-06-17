@@ -9,7 +9,7 @@ import {
 } from '@/components/ui'
 import { useUserStore } from '@/store'
 
-import { Home, LogIn, Upload, User as UserIcon } from 'lucide-react'
+import { Home, Images, LogIn, Upload, User as UserIcon } from 'lucide-react'
 import { memo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -118,7 +118,7 @@ const Card = memo(({ userInfo }: CardProps) => {
                 variant="ghost"
                 className="justify-start px-2 text-sm"
               >
-                <Upload className="mr-2 h-4 w-4" />
+                <Images className="mr-2 h-4 w-4" />
                 图片库
               </Button>
               <Button
