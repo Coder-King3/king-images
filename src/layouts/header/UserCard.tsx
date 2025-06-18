@@ -7,6 +7,7 @@ import {
   HoverCardContent,
   HoverCardTrigger
 } from '@/components/ui'
+import { useHoverOpen } from '@/hooks'
 import { useUserStore } from '@/store'
 
 import { Home, Images, LogIn, Upload, User as UserIcon } from 'lucide-react'
@@ -60,27 +61,28 @@ interface CardProps {
 }
 
 const Card = memo(({ userInfo }: CardProps) => {
+  const { hoverProps, open } = useHoverOpen({
+    closeDelay: 50,
+    openDelay: 100
+  })
   const navigate = useNavigate()
-  const location = useLocation()
 
   const goToBilibili = () => {
     window.open('https://www.bilibili.com/', '_blank')
   }
 
   const goToUpload = (tab: 'gallery' | 'upload') => {
-    if (location.pathname === '/upload') {
-      // 如果已经在上传页面，则通过修改URL并重新加载页面来切换标签
-      window.location.href = `/upload?tab=${tab}`
-    } else {
-      // 如果不在上传页面，则使用navigate进行导航
-      navigate(`/upload?tab=${tab}`)
-    }
+    // 始终使用navigate进行导航，保持SPA体验
+    navigate(`/upload?tab=${tab}`)
   }
 
   return (
-    <HoverCard openDelay={100} closeDelay={50}>
+    <HoverCard open={open}>
       <HoverCardTrigger asChild>
-        <div className="flex cursor-pointer items-center gap-1.5">
+        <div
+          className="flex h-full cursor-pointer items-center gap-1.5"
+          {...hoverProps}
+        >
           <span className="text-sm font-bold">{userInfo?.name}</span>
           <Avatar>
             <AvatarImage src={userInfo?.avatar} />
@@ -88,7 +90,7 @@ const Card = memo(({ userInfo }: CardProps) => {
           </Avatar>
         </div>
       </HoverCardTrigger>
-      <HoverCardContent className="w-64">
+      <HoverCardContent className="w-64" {...hoverProps}>
         <div className="flex flex-col space-y-4">
           <div className="flex items-center">
             <Avatar className="mr-3 ml-2 size-14">

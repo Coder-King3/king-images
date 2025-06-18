@@ -41,4 +41,4 @@ const useIsMobile = (mobileWidth: number = 768, debounceTime: number = 150) => {
   return isMobile
 }
 
-export default useIsMobile
+export { useIsMobile }

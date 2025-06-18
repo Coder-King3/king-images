@@ -78,7 +78,7 @@ function QrcodePanel({ toggleButton }: QrcodePanelProps) {
       setQrcodeStatus('获取二维码中...')
 
       const response = await generateQrcode()
-      if (response && response.code === 0) {
+      if (response.data && response.code === 0) {
         setQrcodeUrl(response.data.url)
         setQrcodeKey(response.data.qrcode_key)
         setPolling(true)
@@ -132,7 +132,7 @@ function QrcodePanel({ toggleButton }: QrcodePanelProps) {
       const response = await pollQrcode(qrcodeKey)
 
       // 根据B站API返回的状态码处理不同状态
-      if (response && response.code === 0) {
+      if (response.data && response.code === 0) {
         const data = response.data
 
         switch (data.code) {

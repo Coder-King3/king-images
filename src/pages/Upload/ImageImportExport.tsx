@@ -2,7 +2,7 @@ import type { ImageInfo } from '@/types'
 
 import { Button } from '@/components/ui'
 import { imagesTable } from '@/db'
-import useIsMobile from '@/hooks/useIsMobile'
+import { useIsMobile } from '@/hooks'
 import { cn } from '@/utils'
 
 import { Download, Upload } from 'lucide-react'

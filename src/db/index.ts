@@ -1,8 +1,6 @@
 // db.js
 import Dexie from 'dexie'
 
-import { createImageHelper } from './helper'
-
 // 创建数据库实例
 const db = new Dexie('KingDatabase')
 
@@ -14,10 +12,5 @@ db.version(1).stores({
 /* 图片表 */
 const imagesTable = db.table('images')
 
-const imagesHelper = createImageHelper(imagesTable)
-
-// 导出数据库实例
 export default db
-
-// 导出图片表操作辅助函数
-export { imagesHelper, imagesTable }
+export { imagesTable }

@@ -28,3 +28,31 @@ export const toMarkdown = (url: string, name: string = ''): string => {
 export const toWebp = (url: string, optionStr: string = ''): string => {
   return `${url}@${optionStr}1e_1c.webp`
 }
+
+// 使用异步函数处理复制，并添加错误处理
+export const copyToClipboard = async (text: string) => {
+  try {
+    // 优先使用现代 Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+
+    // 回退方法：创建临时输入框
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.left = '-999999px'
+    textArea.style.top = '-999999px'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    const success = document.execCommand('copy')
+    document.body.removeChild(textArea)
+    return success
+  } catch (err) {
+    console.error('复制失败:', err)
+    return false
+  }
+}

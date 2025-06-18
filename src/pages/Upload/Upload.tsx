@@ -1,7 +1,7 @@
 import { Transition } from '@/components'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 
 import ImageGallery from './ImageGallery'
@@ -13,9 +13,17 @@ type UploadTab = 'gallery' | 'upload'
 function Upload() {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [activeTab, setActiveTab] = useState<UploadTab>(
-    (searchParams.get('tab') as UploadTab) || 'upload'
-  )
+  const uploadTab = useMemo(() => {
+    return (searchParams.get('tab') as UploadTab) || 'upload'
+  }, [searchParams])
+
+  const [activeTab, setActiveTab] = useState<UploadTab>(uploadTab)
+
+  useEffect(() => {
+    if (uploadTab !== activeTab) {
+      setActiveTab(uploadTab)
+    }
+  }, [uploadTab])
 
   function handleTabChange(value: string) {
     setSearchParams({ tab: value })

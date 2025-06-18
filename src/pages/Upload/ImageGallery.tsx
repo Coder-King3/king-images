@@ -18,14 +18,18 @@ import {
   TooltipTrigger
 } from '@/components/ui'
 import { imagesTable } from '@/db'
-import { cn, toMarkdown, toWebp } from '@/utils'
+import { useIsMobile } from '@/hooks'
+import { cn, copyToClipboard, toMarkdown, toWebp } from '@/utils'
 
 import { useLiveQuery } from 'dexie-react-hooks'
 import { motion } from 'framer-motion'
 import { CircleHelp, Copy, ImageOff, X, ZoomIn } from 'lucide-react'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 // import { toast } from 'sonner'
+
+// 添加格式配置状态
+type FormatType = 'custom' | 'markdown' | 'original' | 'webp'
 
 // 计算图片的宽高比
 function calculateImageRatio(image: ImageInfo): string {
@@ -172,6 +176,8 @@ interface GalleryListProps {
 }
 
 const GalleryList = memo((props: GalleryListProps) => {
+  const isMobile = useIsMobile(448)
+
   const { handleCopyImage, handleOpenPreview, images } = props
   const [openPopoverId, setOpenPopoverId] = useState<null | string>(null)
 
@@ -222,9 +228,23 @@ const GalleryList = memo((props: GalleryListProps) => {
                 transform: 'translateZ(0)'
               }}
             />
+            {/* 图片操作 */}
             <motion.div
-              className="supports-[backdrop-filter]:bg-foreground/30 lg:rounded-24 absolute inset-0 justify-between rounded-md opacity-0 backdrop-blur"
+              className="supports-[backdrop-filter]:bg-foreground/30 lg:rounded-24 absolute inset-0 justify-between rounded-md backdrop-blur transition-opacity"
+              initial={{ opacity: 0 }}
               whileHover={{ opacity: 1 }}
+              {...(isMobile
+                ? {
+                    onMouseEnter: (e) => {
+                      e.stopPropagation()
+                      e.currentTarget.style.opacity = '1'
+                    },
+                    onMouseLeave: (e) => {
+                      e.stopPropagation()
+                      e.currentTarget.style.opacity = '0'
+                    }
+                  }
+                : {})}
               transition={{ duration: 0.2 }}
             >
               {/* 按钮操作 */}
@@ -309,6 +329,112 @@ const GalleryList = memo((props: GalleryListProps) => {
   )
 })
 
+interface FormatConfigProps {
+  formatType: FormatType
+  onFormatChange: (formatType: FormatType, customSuffix: string) => void
+}
+
+const FormatConfig = memo((props: FormatConfigProps) => {
+  const { formatType, onFormatChange } = props
+  const [popoverOpen, setPopoverOpen] = useState(false)
+  const [localFormatType, setLocalFormatType] = useState<FormatType>(formatType)
+  const [customSuffix, setCustomSuffix] = useState('')
+
+  // 格式示例文本
+  const formatExample = useMemo(() => {
+    const url = '${url}'
+    switch (localFormatType) {
+      case 'original':
+        return url
+      case 'webp':
+        return `${url}@1e_1c.webp`
+      case 'markdown':
+        return `![alt](${url})`
+      case 'custom':
+        return `${url}${customSuffix}`
+      default:
+        return url
+    }
+  }, [localFormatType, customSuffix])
+
+  // 当点击确认按钮时，将更改应用到父组件
+  const handleConfirm = useCallback(() => {
+    onFormatChange(localFormatType, customSuffix)
+    setPopoverOpen(false)
+  }, [localFormatType, customSuffix, onFormatChange])
+
+  // 当打开弹窗时，同步父组件的状态
+  useEffect(() => {
+    setLocalFormatType(formatType)
+  }, [formatType, popoverOpen])
+
+  return (
+    <div className="flex items-center gap-2">
+      <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm">
+            <span>格式配置</span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80">
+          <div className="space-y-4">
+            <div className="flex items-center gap-1">
+              <h4 className="font-medium">选择图片格式</h4>
+              <FormatHelpIcon />
+            </div>
+            <RadioGroup
+              value={localFormatType}
+              onValueChange={(value: FormatType) => setLocalFormatType(value)}
+              className="space-y-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="original" id="original" />
+                <Label htmlFor="original">原图</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="webp" id="webp" />
+                <Label htmlFor="webp">WebP</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="markdown" id="markdown" />
+                <Label htmlFor="markdown">Markdown</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="custom" id="custom" />
+                <Label htmlFor="custom">自定义</Label>
+              </div>
+            </RadioGroup>
+
+            {localFormatType === 'custom' && (
+              <div className="pt-2">
+                <Label htmlFor="custom-suffix">自定义后缀</Label>
+                <Input
+                  id="custom-suffix"
+                  value={customSuffix}
+                  onChange={(e) => setCustomSuffix(e.target.value)}
+                  placeholder="输入自定义后缀"
+                  className="mt-1"
+                />
+              </div>
+            )}
+
+            <div className="bg-muted rounded-md p-2">
+              <p className="text-sm font-medium">当前格式:</p>
+              <code className="mt-1 block overflow-x-auto text-xs break-all whitespace-pre-wrap">
+                {formatExample}
+              </code>
+            </div>
+
+            <Button className="w-full" onClick={handleConfirm}>
+              确认
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  )
+})
+
 const ImageGallery = memo(() => {
   // 获取图片并按照日期从早到晚排序
   const images = useLiveQuery<GalleryList[]>(
@@ -330,28 +456,14 @@ const ImageGallery = memo(() => {
   const { active, handleClose, handleOpen, setActive, visible } =
     useImagePreview()
 
-  // 添加格式配置状态
-  type FormatType = 'custom' | 'markdown' | 'original' | 'webp'
   const [formatType, setFormatType] = useState<FormatType>('original')
   const [customSuffix, setCustomSuffix] = useState('')
-  const [popoverOpen, setPopoverOpen] = useState(false)
 
-  // 格式示例文本
-  const formatExample = useMemo(() => {
-    const url = '${url}'
-    switch (formatType) {
-      case 'original':
-        return url
-      case 'webp':
-        return `${url}@1e_1c.webp`
-      case 'markdown':
-        return `![alt](${url})`
-      case 'custom':
-        return `${url}${customSuffix}`
-      default:
-        return url
-    }
-  }, [formatType, customSuffix])
+  // 处理格式变更
+  const handleFormatChange = useCallback((type: FormatType, suffix: string) => {
+    setFormatType(type)
+    setCustomSuffix(suffix)
+  }, [])
 
   const handleCopy = useCallback(
     (name: string, url: string) => {
@@ -364,17 +476,22 @@ const ImageGallery = memo(() => {
         copyText = `${url}${customSuffix}`
       }
 
-      navigator.clipboard.writeText(copyText)
-      toast.success(
-        <p>
-          <span>复制成功: {name}</span>
-          <br />
-          <span className="break-all">{copyText}</span>
-        </p>,
-        {
-          closeButton: true
+      copyToClipboard(copyText).then((success) => {
+        if (success) {
+          toast.success(
+            <p>
+              <span>复制成功: {name}</span>
+              <br />
+              <span className="break-all">{copyText}</span>
+            </p>,
+            {
+              closeButton: true
+            }
+          )
+        } else {
+          toast.error('复制失败，请手动复制')
         }
-      )
+      })
     },
     [formatType, customSuffix]
   )
@@ -387,74 +504,11 @@ const ImageGallery = memo(() => {
         <div className="mb-3 flex items-center justify-between">
           {/* 标题 */}
           <h3 className="text-lg font-medium">已传图片</h3>
-          {/* 功能块 */}
-          <div className="flex items-center gap-2">
-            {/* 格式 */}
-            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <span>格式配置</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-1">
-                    <h4 className="font-medium">选择图片格式</h4>
-                    <FormatHelpIcon />
-                  </div>
-                  <RadioGroup
-                    value={formatType}
-                    onValueChange={(value: FormatType) => setFormatType(value)}
-                    className="space-y-2"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="original" id="original" />
-                      <Label htmlFor="original">原图</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="webp" id="webp" />
-                      <Label htmlFor="webp">WebP</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="markdown" id="markdown" />
-                      <Label htmlFor="markdown">Markdown</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="custom" id="custom" />
-                      <Label htmlFor="custom">自定义</Label>
-                    </div>
-                  </RadioGroup>
-
-                  {formatType === 'custom' && (
-                    <div className="pt-2">
-                      <Label htmlFor="custom-suffix">自定义后缀</Label>
-                      <Input
-                        id="custom-suffix"
-                        value={customSuffix}
-                        onChange={(e) => setCustomSuffix(e.target.value)}
-                        placeholder="输入自定义后缀"
-                        className="mt-1"
-                      />
-                    </div>
-                  )}
-
-                  <div className="bg-muted rounded-md p-2">
-                    <p className="text-sm font-medium">当前格式:</p>
-                    <code className="mt-1 block overflow-x-auto text-xs break-all whitespace-pre-wrap">
-                      {formatExample}
-                    </code>
-                  </div>
-
-                  <Button
-                    className="w-full"
-                    onClick={() => setPopoverOpen(false)}
-                  >
-                    确认
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
-          </div>
+          {/* 格式配置 */}
+          <FormatConfig
+            formatType={formatType}
+            onFormatChange={handleFormatChange}
+          />
         </div>
         {/* 图片列表 */}
         {images && images.length > 0 ? (

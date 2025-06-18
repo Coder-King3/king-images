@@ -14,9 +14,10 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui'
-import { imagesHelper } from '@/db'
+import { imagesTable } from '@/db'
+import { useIsMobile } from '@/hooks'
 import { useUploadStore } from '@/store'
-import { cn, toMarkdown, toWebp } from '@/utils'
+import { cn, copyToClipboard, toMarkdown, toWebp } from '@/utils'
 import { uploadBatch } from '@/utils/upload'
 
 import { motion } from 'framer-motion'
@@ -103,30 +104,33 @@ const UploadArea = memo(() => {
   )
 
   // 处理粘贴事件
-  const handlePaste = useCallback((e: ClipboardEvent) => {
-    // 阻止事件冒泡，防止多次处理同一粘贴事件
-    e.stopPropagation()
+  const handlePaste = useCallback(
+    (e: ClipboardEvent) => {
+      // 阻止事件冒泡，防止多次处理同一粘贴事件
+      e.stopPropagation()
 
-    const items = e.clipboardData?.items
-    if (!items) return
+      const items = e.clipboardData?.items
+      if (!items) return
 
-    const imageFiles: File[] = []
+      const imageFiles: File[] = []
 
-    // 直接处理所有图片文件，不再使用Set去重
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i]
+      // 直接处理所有图片文件，不再使用Set去重
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i]
 
-      // 处理剪贴板中的图片文件
-      if (item.kind === 'file' && item.type.startsWith('image/')) {
-        const file = item.getAsFile()
-        if (file) imageFiles.push(file)
+        // 处理剪贴板中的图片文件
+        if (item.kind === 'file' && item.type.startsWith('image/')) {
+          const file = item.getAsFile()
+          if (file) imageFiles.push(file)
+        }
       }
-    }
 
-    if (imageFiles.length > 0) {
-      setUploadFiles([...uploadFiles, ...imageFiles])
-    }
-  }, [])
+      if (imageFiles.length > 0) {
+        setUploadFiles([...uploadFiles, ...imageFiles])
+      }
+    },
+    [uploadFiles]
+  )
 
   // 触发文件选择器点击
   const triggerFileInput = useCallback(() => {
@@ -200,6 +204,8 @@ interface UploadFilePreviewListProps {
 const UploadFilePreviewList = memo((props: UploadFilePreviewListProps) => {
   const { handleOpenPreview, handleRemoveImage, images } = props
 
+  const isMobile = useIsMobile(448)
+
   return (
     <div className="max-h-[476px] overflow-y-auto will-change-scroll">
       <div className="grid grid-cols-2 gap-2 will-change-transform sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -215,7 +221,20 @@ const UploadFilePreviewList = memo((props: UploadFilePreviewListProps) => {
               style={{ objectFit: 'cover' }}
             />
             <motion.div
-              className="supports-[backdrop-filter]:bg-foreground/30 absolute inset-0 justify-between opacity-0 backdrop-blur"
+              className="supports-[backdrop-filter]:bg-foreground/30 absolute inset-0 justify-between backdrop-blur transition-opacity"
+              initial={{ opacity: 0 }}
+              {...(isMobile
+                ? {
+                    onMouseEnter: (e) => {
+                      e.stopPropagation()
+                      e.currentTarget.style.opacity = '1'
+                    },
+                    onMouseLeave: (e) => {
+                      e.stopPropagation()
+                      e.currentTarget.style.opacity = '0'
+                    }
+                  }
+                : {})}
               whileHover={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
@@ -311,7 +330,7 @@ const SelectedUploadFiles = memo(() => {
       })
 
       if (result.successCount > 0) {
-        imagesHelper.addImages(result.success)
+        imagesTable.bulkAdd(result.success)
         setRecentlyImages(result.success)
         toast.success(`成功上传${result.successCount}张图片`)
       }
@@ -412,17 +431,22 @@ const RecentlyUploadedList = memo(({ format }: { format: ImageFormat }) => {
     const copyText =
       format === 'markdown' ? toMarkdown(url, name) : toWebp(url, name)
 
-    navigator.clipboard.writeText(copyText)
-    toast.success(
-      <p>
-        <span>复制成功: {name}</span>
-        <br />
-        <span className="break-all">{copyText}</span>
-      </p>,
-      {
-        closeButton: true
+    copyToClipboard(copyText).then((success) => {
+      if (success) {
+        toast.success(
+          <p>
+            <span>复制成功: {name}</span>
+            <br />
+            <span className="break-all">{copyText}</span>
+          </p>,
+          {
+            closeButton: true
+          }
+        )
+      } else {
+        toast.error('复制失败，请手动复制')
       }
-    )
+    })
   }
 
   return (

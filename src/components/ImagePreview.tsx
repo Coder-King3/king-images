@@ -1,4 +1,4 @@
-import useIsMobile from '@/hooks/useIsMobile'
+import { useIsMobile } from '@/hooks'
 import { cn } from '@/utils'
 
 import { css } from '@emotion/css'
@@ -192,44 +192,53 @@ export const ImagePreview = memo((options: ImagePreviewProps) => {
         speed={() => 300}
         className={PhotoSliderCss}
         easing={() => 'cubic-bezier(0.4, 0, 0.2, 1)'}
-        overlayRender={({ index, onIndexChange }) => (
-          <>
-            {/* 左右换页箭头 */}
-            <motion.div
-              initial={{ x: -3 }}
-              animate={{ x: -3 }}
-              whileHover={{ x: 0 }}
-              whileTap={{ x: -3 }}
-              transition={{ duration: 0.2 }}
-              className={cn(
-                'preview-prev-page bg-accent-foreground text-accent absolute left-0 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tr-md rounded-br-md pl-[3px]',
-                isMobile ? 'bottom-3' : 'top-1/2'
-              )}
-              onClick={() => onIndexChange(index - 1)}
-            >
-              <ChevronLeft className="size-7" />
-            </motion.div>
-            <motion.div
-              initial={{ x: 3 }}
-              animate={{ x: 3 }}
-              whileHover={{ x: 0 }}
-              whileTap={{ x: 3 }}
-              transition={{ duration: 0.2 }}
-              className={cn(
-                'preview-next-page bg-accent-foreground text-accent absolute right-0 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tl-md rounded-bl-md pr-[3px]',
-                isMobile ? 'bottom-3' : 'top-1/2'
-              )}
-              onClick={() => onIndexChange(index + 1)}
-            >
-              <ChevronRight className="size-7" />
-            </motion.div>
-          </>
-        )}
+        overlayRender={({ index, onIndexChange }) =>
+          totalPage > 1 && (
+            <>
+              {/* 左右换页箭头 */}
+              <motion.div
+                initial={{ x: -3 }}
+                animate={{ x: -3 }}
+                whileHover={{ x: 0 }}
+                whileTap={{ x: -3 }}
+                transition={{ duration: 0.2 }}
+                className={cn(
+                  'preview-prev-page bg-accent-foreground text-accent absolute left-0 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tr-md rounded-br-md pl-[3px]',
+                  isMobile ? 'bottom-3' : 'top-1/2'
+                )}
+                onClick={() => onIndexChange(index - 1)}
+              >
+                <ChevronLeft className="size-7" />
+              </motion.div>
+              <motion.div
+                initial={{ x: 3 }}
+                animate={{ x: 3 }}
+                whileHover={{ x: 0 }}
+                whileTap={{ x: 3 }}
+                transition={{ duration: 0.2 }}
+                className={cn(
+                  'preview-next-page bg-accent-foreground text-accent absolute right-0 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tl-md rounded-bl-md pr-[3px]',
+                  isMobile ? 'bottom-3' : 'top-1/2'
+                )}
+                onClick={() => onIndexChange(index + 1)}
+              >
+                <ChevronRight className="size-7" />
+              </motion.div>
+            </>
+          )
+        }
         toolbarRender={({ onClose, onRotate, onScale, rotate, scale }) => (
           <>
             {/* 头部导航栏 */}
             <div className="preview-navbar flex size-full items-center justify-between px-3 pt-3">
-              <DotPagination currentPage={activePage} totalPages={totalPage} />
+              {totalPage > 1 ? (
+                <DotPagination
+                  currentPage={activePage}
+                  totalPages={totalPage}
+                />
+              ) : (
+                <i />
+              )}
               <div className="bg-accent-foreground text-accent flex h-11 items-center gap-2.5 rounded-full px-3.5">
                 <motion.div
                   whileHover={{ rotate: -30, scale: 1.1 }}
