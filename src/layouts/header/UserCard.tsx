@@ -8,9 +8,10 @@ import {
   HoverCardTrigger
 } from '@/components/ui'
 import { useHoverOpen } from '@/hooks'
+import { Bilibili, Github } from '@/icons'
 import { useUserStore } from '@/store'
 
-import { Home, Images, LogIn, Upload, User as UserIcon } from 'lucide-react'
+import { Home, Images, LogIn, Upload } from 'lucide-react'
 import { memo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -68,7 +69,11 @@ const Card = memo(({ userInfo }: CardProps) => {
   const navigate = useNavigate()
 
   const goToBilibili = () => {
-    window.open('https://www.bilibili.com/', '_blank')
+    window.open('https://www.bilibili.com', '_blank')
+  }
+
+  const goToGithub = () => {
+    window.open('https://github.com/Coder-King3/king-images', '_blank')
   }
 
   const goToUpload = (tab: 'gallery' | 'upload') => {
@@ -128,8 +133,16 @@ const Card = memo(({ userInfo }: CardProps) => {
                 variant="ghost"
                 className="justify-start px-2 text-sm"
               >
-                <UserIcon className="mr-2 h-4 w-4" />
+                <Bilibili className="mr-2 h-4 w-4" />
                 B站主页
+              </Button>
+              <Button
+                onClick={goToGithub}
+                variant="ghost"
+                className="justify-start px-2 text-sm"
+              >
+                <Github className="mr-2 h-4 w-4" />
+                Github
               </Button>
             </div>
           </div>

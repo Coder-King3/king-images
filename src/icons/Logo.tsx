@@ -1,18 +1,14 @@
+import type { IconProps } from './types'
+
 import { cn } from '@/utils'
 
-interface LogoProps {
-  className?: string
-  fillColor?: string
-  size?: number | string
-  strokeColor?: string
-}
-
 function Logo({
-  className = '',
+  className,
   fillColor = '#2F88FF',
   size = 24,
-  strokeColor = 'currentColor'
-}: LogoProps) {
+  strokeColor = 'currentColor',
+  strokeWidth = 2
+}: IconProps) {
   return (
     <svg
       width={size}
@@ -20,15 +16,9 @@ function Logo({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      strokeWidth="2"
+      strokeWidth={strokeWidth}
       stroke={strokeColor}
       className={cn('king-icon', className)}
-      style={{
-        height: size,
-        minHeight: size,
-        minWidth: size,
-        width: size
-      }}
     >
       <g clipPath="url(#clip0_24_22)">
         <path
