@@ -436,12 +436,12 @@ const FormatConfig = memo((props: FormatConfigProps) => {
 })
 
 const ImageGallery = memo(() => {
-  // 获取图片并按照日期从早到晚排序
+  // 获取图片并按照日期从晚到早排序
   const images = useLiveQuery<GalleryList[]>(
     () =>
       imagesTable.toArray().then((images) =>
         images
-          .sort((a, b) => a.date - b.date)
+          .sort((a, b) => b.date - a.date)
           .map((item) => ({
             aspectRatio: calculateImageRatio(item),
             compressSrc: toWebp(item.url),
